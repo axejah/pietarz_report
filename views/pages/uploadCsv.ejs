@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<body class="container">
+
+  <main>
+    <div class="jumbotron mt-3">
+      <h1>Keyword Research Report</h1>
+      <p>Convert CSV to Pietarz Report</p>
+    </div>
+  </main>
+
+  <article>
+    <form action="/api/csv/upload" method="POST" enctype="multipart/form-data">
+      <label for="formFile" class="form-label">Select CSV File</label>
+      <div class="input-group">
+        <input class="form-control" id="formFile" type="file" name="csvReport">
+        <input type="submit" value="submit" class="btn" />
+      </div>
+
+    </form>
+  </article>
+
+  <%- include('../partials/footer'); %>
+</body>
+
+</html>
