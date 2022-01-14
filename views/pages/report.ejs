@@ -6,13 +6,91 @@
 </head>
 
 <body>
+  <div class="container mt-5">
+    <h2>Generated report</h2>
+    <% if(returnObj.unsortedData) { %>
 
+    <table class="table table-striped" id="reportTable">
+      <thead>
+        <tr>
+          <th scope="col">Keyword</th>
+          <th scope="col" onclick="sortTable(0)" style="cursor: pointer;">Rank</th>
+          <th scope="col" onclick="sortTable(1)" style="cursor: pointer;">Change</th>
+          <th scope="col" onclick="sortTable(2)" style="cursor: pointer;">Difficulty</th>
+          <th scope="col" onclick="sortTable(3)" style="cursor: pointer;">Volume</th>
+          <th scope="col">URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < returnObj.unsortedData.keywordLabel.length; i++) { %>
+        <tr>
+          <th><%= returnObj.unsortedData.keywordLabel[i] %></th>
+          <td><%= returnObj.unsortedData.rankValue[i] %></td>
+          <td><%= returnObj.unsortedData.rankChange[i] %></td>
+          <td><%= returnObj.unsortedData.rankDifficulty[i] %></td>
+          <td><%= returnObj.unsortedData.rankVolume[i] %></td>
+          <td><%= returnObj.unsortedData.rankUrl[i] %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
 
+    <% } %>
 
+  </div>
   <%- include('../partials/footer'); %>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"
     integrity="sha256-Y26AMvaIfrZ1EQU49pf6H4QzVTrOI8m9wQYKkftBt4s=" crossorigin="anonymous"></script>
 
+
+  <%
+    const volumeLabel = returnObj.sortedData.byVolume.volumeLabel
+    const volumeData = returnObj.sortedData.byVolume.volumeData 
+    console.log(volumeLabel)
+    %>
+
+  <script>
+    function sortTable(n) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("reportTable");
+      switching = true;
+
+      dir = "asc";
+
+      while (switching) {
+
+        switching = false;
+        rows = table.rows;
+
+        for (i = 1; i < (rows.length - 1); i++) {
+          shouldSwitch = false;
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          if (dir == "asc") {
+            if (Number(x.innerHTML) > Number(y.innerHTML)) {
+              shouldSwitch = true;
+              break;
+            }
+          } else if (dir == "desc") {
+            if (Number(x.innerHTML) < Number(y.innerHTML)) {
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount++;
+        } else {
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    }
+  </script>
 
 
 </body>
