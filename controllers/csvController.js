@@ -1,5 +1,7 @@
 const db = require('../models');
-const { uuid } = require('uuidv4');
+const {
+  uuid
+} = require('uuidv4');
 
 const CSVReport = db.CSVReport;
 
@@ -10,7 +12,9 @@ const upload = async (req, res) => {
   console.log(req.file);
   try {
     if (req.file == undefined) {
-      return res.status(400).json({ message: 'Please upload a file.' });
+      return res.status(400).json({
+        message: 'Please upload a file.'
+      });
     }
 
     let csvreports = [];
@@ -20,7 +24,9 @@ const upload = async (req, res) => {
       __basedir + '/resources/static/assets/uploads/' + req.file.filename;
 
     fs.createReadStream(path)
-      .pipe(csv.parse({ headers: true }))
+      .pipe(csv.parse({
+        headers: true
+      }))
       .on('error', (error) => {
         throw error.message;
       })
@@ -45,12 +51,6 @@ const upload = async (req, res) => {
               collectionid,
               rows: csvreports.length,
             });
-            // res.status(200).send({
-            //   message:
-            //     'Uploaded the file successfully: ' + req.file.originalname,
-            //   collectionId,
-            //   rows: csvreports.length,
-            // });
           })
           .catch((error) => {
             res.status(500).json({
@@ -68,7 +68,9 @@ const upload = async (req, res) => {
 };
 
 const getCSVReports = (req, res) => {
-  const { collectionId } = req.body;
+  const {
+    collectionId
+  } = req.body;
 
   if (!collectionId) {
     return res.status(500).json({
@@ -77,10 +79,10 @@ const getCSVReports = (req, res) => {
   }
 
   CSVReport.findAll({
-    where: {
-      collection: collectionId,
-    },
-  })
+      where: {
+        collection: collectionId,
+      },
+    })
     .then((data) => {
       res.send(data);
     })
@@ -95,17 +97,21 @@ const uploadPage = (req, res) => {
   res.render('pages/uploadCsv');
 };
 
-const generateReport = (req, res) => {
-  const { collectionId } = req.params;
+const getReportData = (req, res) => {
+  const {
+    collectionId
+  } = req.params;
 
   if (!collectionId) {
-    return res.status(400).json({ message: 'no collectionId supplied' });
+    return res.status(400).json({
+      message: 'no collectionId supplied'
+    });
   }
   CSVReport.findAll({
-    where: {
-      collection: collectionId,
-    },
-  })
+      where: {
+        collection: collectionId,
+      },
+    })
     .then((data) => {
       let keywordLabel = [];
       let rankValue = [];
@@ -176,7 +182,7 @@ const generateReport = (req, res) => {
           rankChange,
           rankDifficulty,
           rankVolume,
-          rankUrl,
+          rankUrl
         },
         sortedData: {
           byPosition: {
@@ -194,7 +200,7 @@ const generateReport = (req, res) => {
         },
       };
 
-      return res.render('pages/report', { returnObj });
+      return res.status(200).json(returnObj)
     })
     .catch((err) => {
       res.status(500).json({
@@ -203,9 +209,15 @@ const generateReport = (req, res) => {
     });
 };
 
+const generateReport = (req, res) => {
+  res.render('pages/report2')
+}
+
+
 module.exports = {
   upload,
   getCSVReports,
   uploadPage,
   generateReport,
+  getReportData
 };
