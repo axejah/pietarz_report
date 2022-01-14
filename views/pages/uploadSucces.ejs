@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<body class="container">
+
+  <main>
+    <div class="jumbotron mt-3">
+      <h1>Keyword Research Report</h1>
+      <p>Convert CSV to Pietarz Report</p>
+    </div>
+  </main>
+
+  <article>
+    <h1>File uploaded succesful</h1>
+    <h3><%= rows %> rows imported</h3>
+
+    <a href="/report/<%= collectionid %>" class="btn btn-success">Generate Report</a>
+    <span style="display: none" id="collection-id"><%= collectionid %></span>
+  </article>
+
+  <%- include('../partials/footer'); %>
+</body>
+
+</html>

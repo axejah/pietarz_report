@@ -41,10 +41,16 @@ const upload = async (req, res) => {
       .on('end', () => {
         CSVReport.bulkCreate(csvreports)
           .then(() => {
-            res.status(200).send({
-              message:
-                'Uploaded the file successfully: ' + req.file.originalname,
+            return res.status(200).render('pages/uploadSucces', {
+              collectionid,
+              rows: csvreports.length,
             });
+            // res.status(200).send({
+            //   message:
+            //     'Uploaded the file successfully: ' + req.file.originalname,
+            //   collectionId,
+            //   rows: csvreports.length,
+            // });
           })
           .catch((error) => {
             res.status(500).json({
@@ -80,8 +86,7 @@ const getCSVReports = (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({
-        message:
-          err.message || 'Some error occurred while retrieving tutorials.',
+        message: err.message || 'Some error occurred while retrieving report.',
       });
     });
 };
@@ -90,8 +95,117 @@ const uploadPage = (req, res) => {
   res.render('pages/uploadCsv');
 };
 
+const generateReport = (req, res) => {
+  const { collectionId } = req.params;
+
+  if (!collectionId) {
+    return res.status(400).json({ message: 'no collectionId supplied' });
+  }
+  CSVReport.findAll({
+    where: {
+      collection: collectionId,
+    },
+  })
+    .then((data) => {
+      let keywordLabel = [];
+      let rankValue = [];
+      let rankChange = [];
+      let rankDifficulty = [];
+      let rankVolume = [];
+      let rankUrl = [];
+
+      data.map((obj) => {
+        keywordLabel.push(obj.keyword);
+        rankValue.push(obj.position);
+        rankChange.push(obj.change);
+        rankDifficulty.push(obj.difficulty);
+        rankVolume.push(obj.volume);
+        return rankUrl.push(obj.url);
+      });
+
+      let arrayOfObj = keywordLabel.map((d, i) => {
+        return {
+          label: d,
+          positionData: rankVolume[i] || 0,
+          changeData: rankChange[i] || 0,
+          difficultyData: rankDifficulty[i] || 0,
+          volumeData: rankVolume[i] || 0,
+        };
+      });
+
+      let sortedVolumeData = arrayOfObj.sort(function (a, b) {
+        return b.volumeData - a.volumeData;
+      });
+
+      let volumeLabel = [];
+      let volumeData = [];
+
+      sortedVolumeData.forEach(function (d) {
+        volumeLabel.push(d.label);
+        volumeData.push(d.volumeData);
+      });
+
+      let sortedPositionData = arrayOfObj.sort(function (a, b) {
+        return b.positionData - a.positionData;
+      });
+
+      let positionLabel = [];
+      let positionData = [];
+
+      sortedPositionData.forEach(function (d) {
+        positionLabel.push(d.label);
+        positionData.push(d.positionData);
+      });
+
+      let sortedDifficultyData = arrayOfObj.sort(function (a, b) {
+        return a.difficultyData - b.difficultyData;
+      });
+
+      let difficultyLabel = [];
+      let difficultyData = [];
+
+      sortedDifficultyData.forEach(function (d) {
+        difficultyLabel.push(d.label);
+        difficultyData.push(d.difficultyData);
+      });
+
+      const returnObj = {
+        unsortedData: {
+          keywordLabel,
+          rankValue,
+          rankChange,
+          rankDifficulty,
+          rankVolume,
+          rankUrl,
+        },
+        sortedData: {
+          byPosition: {
+            positionLabel,
+            positionData,
+          },
+          byVolume: {
+            volumeLabel,
+            volumeData,
+          },
+          byDifficulty: {
+            difficultyLabel,
+            difficultyData,
+          },
+        },
+      };
+
+      return res.render('pages/report', { returnObj });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: err.message || 'Some error occurred while retrieving report.',
+      });
+    });
+};
+
 module.exports = {
   upload,
   getCSVReports,
   uploadPage,
+  generateReport,
 };
