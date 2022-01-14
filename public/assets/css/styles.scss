@@ -1,0 +1,15 @@
+.report-top-least {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chart-container {
+  margin: 2rem 0;
+  position: relative;
+  height: 60vh;
+  width: 50vw;
+}
