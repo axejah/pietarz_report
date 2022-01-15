@@ -3,24 +3,38 @@
 
 <head>
   <%- include('../partials/head'); %>
+  <style>
+    header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    main {
+      width: 50%;
+      margin: 2rem auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
 </head>
 
 <body class="container">
 
-  <main>
-    <div class="jumbotron mt-3">
-      <h1>Keyword Research Report</h1>
-      <p>Convert CSV to Pietarz Report</p>
-    </div>
+  <header class="mt-5">
+    <img src="../../assets/img/logo2.webp" alt="pietarz digital marketing logo">
+    <h3>Report Generator</h3>
+  </header>
+
+  <main class="mt-5">
+    <h5>File upload succesful</h5>
+    <span class="text-muted" style="display: block;"><%= rows %> rows imported</span>
+    <a href="/report/<%= collectionid %>" class="btn btn-success mt-5">Generate Report</a>
   </main>
-
-  <article>
-    <h1>File uploaded succesful</h1>
-    <h3><%= rows %> rows imported</h3>
-
-    <a href="/report/<%= collectionid %>" class="btn btn-success">Generate Report</a>
-    <span style="display: none" id="collection-id"><%= collectionid %></span>
-  </article>
 
   <%- include('../partials/footer'); %>
 </body>
