@@ -3,27 +3,40 @@
 
 <head>
   <%- include('../partials/head'); %>
+  <style>
+    header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    main {
+      width: 50%;
+      margin: 2rem auto;
+    }
+  </style>
 </head>
 
-<body class="container">
+<body class="container mt-5">
+
+  <header>
+    <img src="./assets/img/logo2.webp" alt="pietarz digital marketing logo">
+    <h3>Report Generator</h3>
+  </header>
+
 
   <main>
-    <div class="jumbotron mt-3">
-      <h1>Keyword Research Report</h1>
-      <p>Convert CSV to Pietarz Report</p>
-    </div>
-  </main>
-
-  <article>
     <form action="/api/csv/upload" method="POST" enctype="multipart/form-data">
       <label for="formFile" class="form-label">Select CSV File</label>
       <div class="input-group">
         <input class="form-control" id="formFile" type="file" name="csvReport">
-        <input type="submit" value="submit" class="btn" />
+        <input type="submit" value="submit" class="btn btn-success" />
       </div>
 
     </form>
-  </article>
+  </main>
 
   <%- include('../partials/footer'); %>
 
